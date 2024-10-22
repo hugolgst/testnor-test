@@ -14,6 +14,8 @@ interface TasksStore {
   tasks: Array<Task>
 
   getTask: (id: string) => Task | undefined
+  /** Creates a new task with an empty title and returns its id */
+  createTask: () => string 
 }
 
 const useTasksStore = create(
@@ -21,7 +23,19 @@ const useTasksStore = create(
     (set, get) => ({
       tasks: [],
 
-      getTask: (id: string) => get().tasks.find(task => task.id === id)
+      getTask: (id: string) => get().tasks.find(task => task.id === id),
+
+      createTask: () => {
+        const id = crypto.randomUUID()
+        set((state) => {
+          state.tasks.push({
+            id, title: '', isCompleted: false
+          })
+          return { tasks: state.tasks }
+        })
+
+        return id
+      }
     }),
     {
       name: 'tasks-store'
