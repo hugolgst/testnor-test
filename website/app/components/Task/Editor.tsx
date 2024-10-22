@@ -13,7 +13,6 @@ const TaskEditor = ({ id }: TaskEditorProps) => {
   const router = useRouter()
   const { editTask, getTask, deleteTask, addTag, tags: tagsColors } = useTasksStore()
   const [ tagInput, setTagInput ] = useState<string>('')
-  const [ tags, setTags ] = useState<Array<string>>([])
   console.log(tagsColors)
 
   const task = id && getTask(id)
@@ -79,7 +78,7 @@ const TaskEditor = ({ id }: TaskEditorProps) => {
           addTag(tagInput)
           editTask({
             ...task,
-            tags: [ ...tags, tagInput ]
+            tags: [ ...(task.tags ?? []), tagInput ]
           })
           setTagInput('')
         }}>Add tag</Button>
@@ -94,7 +93,10 @@ const TaskEditor = ({ id }: TaskEditorProps) => {
           <TagCloseButton 
             cursor="pointer"
             onClick={() => {
-              setTags(tags.filter(_tag => _tag !== tag))
+              editTask({
+                ...task,
+                tags: task.tags?.filter(_tag => _tag !== tag)
+              })
             }}
           />
         </Tag>))}
