@@ -2,6 +2,7 @@
 
 import { Flex, Heading, chakra } from '@chakra-ui/react'
 import TaskComponent, { Task } from '@/components/Task'
+import CreateTask from '@/components/Task/CreateTask'
 
 const Page = () => {
   const tasks = [
@@ -37,6 +38,8 @@ const Page = () => {
         direction="column" 
         gap="10px"
       >
+        <CreateTask />
+
         {tasks.map((task, i) => (<TaskComponent key={i} task={task} />))}
       </Flex>
     </Flex>

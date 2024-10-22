@@ -28,7 +28,10 @@ const TaskComponent = ({ task }: TaskProps) => {
 
     <Spacer />
 
-    <ArrowForwardIcon h={6} w={6} />
+    <ArrowForwardIcon 
+      cursor="pointer"
+      h={6} w={6} 
+    />
   </Flex>
 }
 
