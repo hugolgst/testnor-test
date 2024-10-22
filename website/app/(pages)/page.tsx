@@ -1,8 +1,16 @@
 'use client'
 
 import { Flex, Heading, chakra } from '@chakra-ui/react'
+import TaskComponent, { Task } from '@/components/Task'
 
 const Page = () => {
+  const tasks = [
+    {
+      title: 'Research content ideas',
+      isCompleted: false
+    }
+  ] as Array<Task>
+
   return <Flex
     w="100vw" h="100vh"
     gap="20px"
@@ -14,16 +22,27 @@ const Page = () => {
 
     </Flex>
 
+    {/* TASK LIST */}
     <Flex 
       flex="2" h="100%"
+      gap="20px"
+      direction="column"
     >
       <Heading size="2xl">
         Today <chakra.span fontSize="0.6em" color="grey">(5)</chakra.span>
       </Heading>
+
+      <Flex 
+        w="100%"
+        direction="column" 
+        gap="10px"
+      >
+        {tasks.map((task, i) => (<TaskComponent key={i} task={task} />))}
+      </Flex>
     </Flex>
 
     <Flex 
-      flex="1" h="100%"
+      flex="2" h="100%"
     >
 
     </Flex>
