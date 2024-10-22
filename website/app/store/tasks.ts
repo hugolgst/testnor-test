@@ -12,6 +12,10 @@ export interface Task {
 
 interface TasksStore {
   tasks: Array<Task>
+  /** name: color */
+  tags: Record<string, string> 
+
+  addTag: (name: string) => void
 
   getTask: (id: string) => Task | undefined
   /** Creates a new task with an empty title and returns its id */
@@ -20,10 +24,21 @@ interface TasksStore {
   deleteTask: (id: string) => void
 }
 
+const DEFAULT_COLORS = [ '#C53030', '#ED8936', '#FAF089', '#68D391', '#4FD1C5', '#4299e1', '#B794F4', '#F687B3', '#E9D8FD', '#A0AEC0' ]
+
 const useTasksStore = create(
   persist<TasksStore>(
     (set, get) => ({
       tasks: [],
+      tags: {},
+
+      addTag: (name: string) => set((state) => {
+        if (name in state.tags) return state
+
+        const color = DEFAULT_COLORS[Math.round(Math.random() * (DEFAULT_COLORS.length - 1))]
+        state.tags[name] = color
+        return { tags: { ...state.tags } }
+      }),
 
       getTask: (id: string) => get().tasks.find(task => task.id === id),
 

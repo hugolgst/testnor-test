@@ -11,9 +11,10 @@ interface TaskEditorProps {
 
 const TaskEditor = ({ id }: TaskEditorProps) => {
   const router = useRouter()
-  const { editTask, getTask, deleteTask } = useTasksStore()
+  const { editTask, getTask, deleteTask, addTag, tags: tagsColors } = useTasksStore()
   const [ tagInput, setTagInput ] = useState<string>('')
   const [ tags, setTags ] = useState<Array<string>>([])
+  console.log(tagsColors)
 
   const task = id && getTask(id)
 
@@ -63,7 +64,7 @@ const TaskEditor = ({ id }: TaskEditorProps) => {
       />
     </Flex>
 
-    <Flex direction="column">
+    <Flex direction="column" gap="5px">
       <Flex alignItems="center" gap="10px">
         <Text w="max-content" flexShrink="0">Tags:</Text>
         <Input 
@@ -73,17 +74,21 @@ const TaskEditor = ({ id }: TaskEditorProps) => {
           }}
         />
         <Button onClick={() => {
-          setTags([ 
-            ...tags,
-            tagInput
-          ])
+          if (task.tags && tagInput in task.tags) return
+        
+          addTag(tagInput)
+          editTask({
+            ...task,
+            tags: [ ...tags, tagInput ]
+          })
           setTagInput('')
         }}>Add tag</Button>
       </Flex>
 
       <Flex alignItems="center" gap="10px">
-        {tags.map((tag, i) => (<Tag
+        {(task.tags ?? []).map((tag, i) => (<Tag
           key={i}
+          backgroundColor={tagsColors[tag]}
         >
           <TagLabel>{tag}</TagLabel>
           <TagCloseButton 
