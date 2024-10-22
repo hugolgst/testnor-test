@@ -1,7 +1,8 @@
-import { Checkbox, Flex, Spacer, Text } from '@chakra-ui/react'
+import { Checkbox, Flex, Spacer, Text, chakra } from '@chakra-ui/react'
 
 import { ArrowForwardIcon } from '@chakra-ui/icons'
 import { Task } from '@/store/tasks'
+import { formatDistanceToNow } from 'date-fns'
 import { useRouter } from 'next/navigation'
 
 interface TaskProps {
@@ -22,9 +23,15 @@ const TaskComponent = ({ task }: TaskProps) => {
   >
     <Checkbox />
 
-    <Text fontSize="1.4em">
-      {task.title}
-    </Text>
+    <Flex alignItems="center" w="100%">
+      <Text fontSize="1.4em">
+        {task.title}
+      </Text>
+
+      <Spacer />
+
+      { task.dueAt && <chakra.span fontSize="0.8em" color="grey">(due {formatDistanceToNow(task.dueAt, { addSuffix: true })})</chakra.span> }
+    </Flex>
 
     <Spacer />
 

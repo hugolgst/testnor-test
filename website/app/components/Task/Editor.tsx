@@ -54,6 +54,12 @@ const TaskEditor = ({ id }: TaskEditorProps) => {
         placeholder='Select Date and Time' 
         size='md' 
         type='datetime-local' 
+        onChange={(e) => {
+          editTask({
+            ...task,
+            dueAt: new Date(e.target.value)
+          })
+        }}
       />
     </Flex>
 
