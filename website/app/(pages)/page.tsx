@@ -7,9 +7,23 @@ import TaskComponent from '@/components/Task'
 import TaskEditor from '@/components/Task/Editor'
 import { useSearchParams } from 'next/navigation'
 import useTasksStore from '@/store/tasks'
+import { useMemo } from 'react'
 
 const Page = () => {
   const { tasks } = useTasksStore()
+
+  const tomorrow = useMemo(() => {
+    const tomorrow = new Date()
+    tomorrow.setHours(tomorrow.getHours() + (24 - tomorrow.getHours()))
+    return tomorrow
+  }, [])
+
+  const todaysTasks = useMemo(() => tasks.filter(task => {
+    if (!task.dueAt) return true
+    return task.dueAt.getTime() < tomorrow.getTime()
+  }), [ tasks, tomorrow ])
+  const laterTasks = useMemo(() => tasks.filter(task => task.dueAt && task.dueAt.getTime() >= tomorrow.getTime()), [ tasks, tomorrow ])
+
   const searchParams = useSearchParams()
 
   return <Flex
@@ -30,7 +44,7 @@ const Page = () => {
       direction="column"
     >
       <Heading size="2xl">
-        Today <chakra.span fontSize="0.6em" color="grey">(5)</chakra.span>
+        Today <chakra.span fontSize="0.6em" color="grey">({todaysTasks.length})</chakra.span>
       </Heading>
 
       <Flex 
@@ -40,7 +54,19 @@ const Page = () => {
       >
         <CreateTask />
 
-        {tasks.map((task, i) => (<TaskComponent key={i} task={task} />))}
+        {todaysTasks.map((task, i) => (<TaskComponent key={i} task={task} />))}
+      </Flex>
+
+      <Heading size="2xl">
+        Later <chakra.span fontSize="0.6em" color="grey">({laterTasks.length})</chakra.span>
+      </Heading>
+
+      <Flex 
+        w="100%"
+        direction="column" 
+        gap="10px"
+      >
+        {laterTasks.map((task, i) => (<TaskComponent key={i} task={task} />))}
       </Flex>
     </Flex>
 

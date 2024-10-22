@@ -17,6 +17,7 @@ interface TasksStore {
   /** Creates a new task with an empty title and returns its id */
   createTask: () => string 
   editTask: (task: Task) => void
+  deleteTask: (id: string) => void
 }
 
 const useTasksStore = create(
@@ -32,7 +33,8 @@ const useTasksStore = create(
           state.tasks.push({
             id, title: '', isCompleted: false
           })
-          return { tasks: state.tasks }
+          return { tasks: [ ...state.tasks ] } // Trick to propagate changes to the component
+
         })
 
         return id
@@ -42,8 +44,12 @@ const useTasksStore = create(
         const index = state.tasks.findIndex(({ id }) => id === task.id)
         state.tasks[index] = task
 
-        return { tasks: state.tasks }
-      })
+        return { tasks: [ ...state.tasks ] } // Trick to propagate changes to the component
+      }),
+
+      deleteTask: (id: string) => set((state) => ({
+        tasks: state.tasks.filter(task => task.id !== id)
+      }))
     }),
     {
       name: 'tasks-store'

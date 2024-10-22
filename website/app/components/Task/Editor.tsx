@@ -1,6 +1,7 @@
 import { Button, Flex, Heading, Input, Spacer, Tag, TagCloseButton, TagLabel, Text, Textarea } from '@chakra-ui/react'
 
 import { DeleteIcon } from '@chakra-ui/icons'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import useTasksStore from '@/store/tasks'
 
@@ -9,7 +10,8 @@ interface TaskEditorProps {
 }
 
 const TaskEditor = ({ id }: TaskEditorProps) => {
-  const { editTask, getTask } = useTasksStore()
+  const router = useRouter()
+  const { editTask, getTask, deleteTask } = useTasksStore()
   const [ tagInput, setTagInput ] = useState<string>('')
   const [ tags, setTags ] = useState<Array<string>>([])
 
@@ -48,7 +50,11 @@ const TaskEditor = ({ id }: TaskEditorProps) => {
 
     <Flex alignItems="center" gap="10px">
       <Text w="max-content" flexShrink="0">Due at:</Text>
-      <Input placeholder='Select Date and Time' size='md' type='datetime-local' />
+      <Input 
+        placeholder='Select Date and Time' 
+        size='md' 
+        type='datetime-local' 
+      />
     </Flex>
 
     <Flex direction="column">
@@ -89,7 +95,15 @@ const TaskEditor = ({ id }: TaskEditorProps) => {
     <Flex gap="10px">
       <Spacer />
 
-      <Button leftIcon={<DeleteIcon />} colorScheme='red' variant='solid'>
+      <Button 
+        leftIcon={<DeleteIcon />} 
+        colorScheme='red' 
+        variant='solid'
+        onClick={() => {
+          deleteTask(id)
+          router.push('/')
+        }}
+      >
         Delete
       </Button>
     </Flex>
