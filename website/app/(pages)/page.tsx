@@ -5,9 +5,9 @@ import { Flex, Heading, chakra } from '@chakra-ui/react'
 import CreateTask from '@/components/Task/CreateTask'
 import TaskComponent from '@/components/Task'
 import TaskEditor from '@/components/Task/Editor'
+import { useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
 import useTasksStore from '@/store/tasks'
-import { useMemo } from 'react'
 
 const Page = () => {
   const { tasks } = useTasksStore()
@@ -18,11 +18,12 @@ const Page = () => {
     return tomorrow
   }, [])
 
-  const todaysTasks = useMemo(() => tasks.filter(task => {
+  const uncompletedTasks = useMemo(() => tasks.filter(task => !task.isCompleted), [ tasks ])
+  const todaysTasks = useMemo(() => uncompletedTasks.filter(task => {
     if (!task.dueAt) return true
     return task.dueAt.getTime() < tomorrow.getTime()
-  }), [ tasks, tomorrow ])
-  const laterTasks = useMemo(() => tasks.filter(task => task.dueAt && task.dueAt.getTime() >= tomorrow.getTime()), [ tasks, tomorrow ])
+  }), [ uncompletedTasks, tomorrow ])
+  const laterTasks = useMemo(() => uncompletedTasks.filter(task => task.dueAt && task.dueAt.getTime() >= tomorrow.getTime()), [ uncompletedTasks, tomorrow ])
 
   const searchParams = useSearchParams()
 
@@ -54,7 +55,7 @@ const Page = () => {
       >
         <CreateTask />
 
-        {todaysTasks.map((task, i) => (<TaskComponent key={i} task={task} />))}
+        {todaysTasks.map((task, i) => (<TaskComponent key={i} id={task.id} />))}
       </Flex>
 
       <Heading size="2xl">
@@ -66,7 +67,7 @@ const Page = () => {
         direction="column" 
         gap="10px"
       >
-        {laterTasks.map((task, i) => (<TaskComponent key={i} task={task} />))}
+        {laterTasks.map((task, i) => (<TaskComponent key={i} id={task.id} />))}
       </Flex>
     </Flex>
 

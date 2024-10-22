@@ -1,17 +1,21 @@
 import { Checkbox, Flex, Spacer, Text, chakra } from '@chakra-ui/react'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import { ArrowForwardIcon } from '@chakra-ui/icons'
-import { Task } from '@/store/tasks'
 import { formatDistanceToNow } from 'date-fns'
-import { useRouter } from 'next/navigation'
+import useTasksStore from '@/store/tasks'
 
 interface TaskProps {
-  task: Task 
+  id: string
 }
 
-const TaskComponent = ({ task }: TaskProps) => {
+const TaskComponent = ({ id }: TaskProps) => {
   const router = useRouter()
+  const { getTask, editTask } = useTasksStore()
+  const task = getTask(id)
+  const searchParams = useSearchParams()
 
+  if (!task) return null
   return <Flex
     w="100%"
     gap="10px"
@@ -21,7 +25,19 @@ const TaskComponent = ({ task }: TaskProps) => {
       router.push(`?id=${task.id}`)
     }}
   >
-    <Checkbox />
+    <Checkbox
+      defaultChecked={task.isCompleted}
+      onChange={(e) => {
+        editTask({
+          ...task,
+          isCompleted: e.target.checked
+        })
+
+        if (searchParams.get('id') === task.id) {
+          router.push('/')
+        }
+      }}
+    />
 
     <Flex alignItems="center" w="100%">
       <Text fontSize="1.4em">
