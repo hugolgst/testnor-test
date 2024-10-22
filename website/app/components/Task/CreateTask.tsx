@@ -1,7 +1,11 @@
 import { Flex, Heading } from '@chakra-ui/react'
 import { PlusSquareIcon } from '@chakra-ui/icons'
 
-const CreateTask = () => {
+interface CreateTaskProps {
+  onOpen: () => void
+}
+
+const CreateTask = ({ onOpen }: CreateTaskProps) => {
   return <Flex
     p="10px"
     gap="10px"
@@ -13,6 +17,7 @@ const CreateTask = () => {
     }}
     alignItems="center"
     borderRadius="10px"
+    onClick={onOpen}
   >
     <PlusSquareIcon w={6} h={6} />
 

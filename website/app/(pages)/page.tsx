@@ -1,12 +1,16 @@
 'use client'
 
-import { Flex, Heading, chakra } from '@chakra-ui/react'
-import TaskComponent, { Task } from '@/components/Task'
+import { Flex, Heading, chakra, useDisclosure } from '@chakra-ui/react'
+
 import CreateTask from '@/components/Task/CreateTask'
+import { Task } from '@/store/tasks'
+import TaskComponent from '@/components/Task'
 
 const Page = () => {
+  const { onOpen } = useDisclosure()
   const tasks = [
     {
+      id:'t',
       title: 'Research content ideas',
       isCompleted: false
     }
@@ -38,7 +42,7 @@ const Page = () => {
         direction="column" 
         gap="10px"
       >
-        <CreateTask />
+        <CreateTask onOpen={onOpen} />
 
         {tasks.map((task, i) => (<TaskComponent key={i} task={task} />))}
       </Flex>

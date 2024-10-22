@@ -1,14 +1,7 @@
 import { Checkbox, Flex, Spacer, Text } from '@chakra-ui/react'
 
 import { ArrowForwardIcon } from '@chakra-ui/icons'
-
-export interface Task {
-  title: string
-  description?: string
-  dueAt?: Date
-  tags?: Array<string>
-  isCompleted: boolean
-}
+import { Task } from '@/store/tasks'
 
 interface TaskProps {
   task: Task 
