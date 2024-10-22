@@ -10,6 +10,12 @@ import TaskEditor from '@/components/Task/Editor'
 import { useSearchParams } from 'next/navigation'
 import useTasksStore from '@/store/tasks'
 
+/*
+ * Thank you all at Testnor for allowing me to complete this exercice!
+ *
+ * I am looking forward to our next chat and hopefully to working with you soon
+ * Best wishes, Hugo
+ */
 const Page = () => {
   const { tasks } = useTasksStore()
   const [ activeTags, setActiveTags ] = useState<Array<string>>([])
