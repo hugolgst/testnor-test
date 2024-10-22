@@ -1,17 +1,21 @@
 import { Button, Flex, Heading, Input, Spacer, Tag, TagCloseButton, TagLabel, Text, Textarea } from '@chakra-ui/react'
 
 import { DeleteIcon } from '@chakra-ui/icons'
-import { Task } from '@/store/tasks'
 import { useState } from 'react'
+import useTasksStore from '@/store/tasks'
 
 interface TaskEditorProps {
-  task: Task
+  id?: string | null
 }
 
-const TaskEditor = ({ task }: TaskEditorProps) => {
+const TaskEditor = ({ id }: TaskEditorProps) => {
+  const { editTask, getTask } = useTasksStore()
   const [ tagInput, setTagInput ] = useState<string>('')
   const [ tags, setTags ] = useState<Array<string>>([])
 
+  const task = id && getTask(id)
+
+  if (!task || !id) return null
   return <Flex
     w="100%" h="100%"
     direction="column"
@@ -25,9 +29,21 @@ const TaskEditor = ({ task }: TaskEditorProps) => {
 
     <Input 
       value={task.title}
+      onChange={(e) => {
+        editTask({
+          ...task,
+          title: e.target.value
+        })
+      }}
     />
     <Textarea 
       value={task.description}
+      onChange={(e) => {
+        editTask({
+          ...task,
+          description: e.target.value
+        })
+      }}
     />
 
     <Flex alignItems="center" gap="10px">
@@ -75,10 +91,6 @@ const TaskEditor = ({ task }: TaskEditorProps) => {
 
       <Button leftIcon={<DeleteIcon />} colorScheme='red' variant='solid'>
         Delete
-      </Button>
-
-      <Button variant='solid'>
-        Save
       </Button>
     </Flex>
 

@@ -1,15 +1,16 @@
 'use client'
 
-import { Flex, Heading, chakra, useDisclosure } from '@chakra-ui/react'
+import { Flex, Heading, chakra } from '@chakra-ui/react'
 
 import CreateTask from '@/components/Task/CreateTask'
 import TaskComponent from '@/components/Task'
-import useTasksStore from '@/store/tasks'
 import TaskEditor from '@/components/Task/Editor'
+import { useSearchParams } from 'next/navigation'
+import useTasksStore from '@/store/tasks'
 
 const Page = () => {
-  const { onOpen } = useDisclosure()
   const { tasks } = useTasksStore()
+  const searchParams = useSearchParams()
 
   return <Flex
     w="100vw" h="100vh"
@@ -46,11 +47,7 @@ const Page = () => {
     <Flex 
       flex="2" h="100%"
     >
-      <TaskEditor task={{
-        id: 'a',
-        title:'test',
-        isCompleted: false
-      }} />
+      <TaskEditor id={searchParams.get('id')} />
     </Flex>
   </Flex>
 }

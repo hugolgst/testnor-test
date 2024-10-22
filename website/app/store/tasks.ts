@@ -16,6 +16,7 @@ interface TasksStore {
   getTask: (id: string) => Task | undefined
   /** Creates a new task with an empty title and returns its id */
   createTask: () => string 
+  editTask: (task: Task) => void
 }
 
 const useTasksStore = create(
@@ -35,7 +36,14 @@ const useTasksStore = create(
         })
 
         return id
-      }
+      },
+
+      editTask: (task: Task) => set((state) => {
+        const index = state.tasks.findIndex(({ id }) => id === task.id)
+        state.tasks[index] = task
+
+        return { tasks: state.tasks }
+      })
     }),
     {
       name: 'tasks-store'

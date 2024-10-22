@@ -2,16 +2,23 @@ import { Checkbox, Flex, Spacer, Text } from '@chakra-ui/react'
 
 import { ArrowForwardIcon } from '@chakra-ui/icons'
 import { Task } from '@/store/tasks'
+import { useRouter } from 'next/navigation'
 
 interface TaskProps {
   task: Task 
 }
 
 const TaskComponent = ({ task }: TaskProps) => {
+  const router = useRouter()
+
   return <Flex
     w="100%"
     gap="10px"
     alignItems="center"
+    cursor="pointer"
+    onClick={() => {
+      router.push(`?id=${task.id}`)
+    }}
   >
     <Checkbox />
 
