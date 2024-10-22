@@ -1,16 +1,18 @@
 'use client'
 
 import { Flex, Heading, chakra } from '@chakra-ui/react'
+import { useMemo, useState } from 'react'
 
 import CreateTask from '@/components/Task/CreateTask'
+import TagList from '@/components/Tag'
 import TaskComponent from '@/components/Task'
 import TaskEditor from '@/components/Task/Editor'
-import { useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
 import useTasksStore from '@/store/tasks'
 
 const Page = () => {
   const { tasks } = useTasksStore()
+  const [ activeTags, setActiveTags ] = useState<Array<string>>([])
 
   const tomorrow = useMemo(() => {
     const tomorrow = new Date()
@@ -19,11 +21,15 @@ const Page = () => {
   }, [])
 
   const uncompletedTasks = useMemo(() => tasks.filter(task => !task.isCompleted), [ tasks ])
-  const todaysTasks = useMemo(() => uncompletedTasks.filter(task => {
+  const filteredTasks = useMemo(() => uncompletedTasks.filter(task => 
+    activeTags.length ? (task.tags ?? []).some(element => activeTags.includes(element)) : true
+  ), [ activeTags, uncompletedTasks ])
+
+  const todaysTasks = useMemo(() => filteredTasks.filter(task => {
     if (!task.dueAt) return true
     return task.dueAt.getTime() < tomorrow.getTime()
-  }), [ uncompletedTasks, tomorrow ])
-  const laterTasks = useMemo(() => uncompletedTasks.filter(task => task.dueAt && task.dueAt.getTime() >= tomorrow.getTime()), [ uncompletedTasks, tomorrow ])
+  }), [ filteredTasks, tomorrow ])
+  const laterTasks = useMemo(() => filteredTasks.filter(task => task.dueAt && task.dueAt.getTime() >= tomorrow.getTime()), [ filteredTasks, tomorrow ])
 
   const searchParams = useSearchParams()
 
@@ -35,7 +41,7 @@ const Page = () => {
     <Flex 
       flex="1" h="100%"
     >
-
+      <TagList activeTags={activeTags} setActiveTags={setActiveTags} />
     </Flex>
 
     {/* TASK LIST */}
