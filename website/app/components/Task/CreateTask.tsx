@@ -1,11 +1,17 @@
 import { Flex, Heading } from '@chakra-ui/react'
 import { PlusSquareIcon } from '@chakra-ui/icons'
+import { useRouter } from 'next/navigation'
+import useTasksStore from '@/store/tasks'
 
-interface CreateTaskProps {
-  onOpen: () => void
-}
+const CreateTask = () => {
+  const { createTask } = useTasksStore()
+  const router = useRouter()
 
-const CreateTask = ({ onOpen }: CreateTaskProps) => {
+  const onClick = () => {
+    const id = createTask()
+    router.push(`?id=${id}`)
+  }
+
   return <Flex
     p="10px"
     gap="10px"
@@ -17,7 +23,7 @@ const CreateTask = ({ onOpen }: CreateTaskProps) => {
     }}
     alignItems="center"
     borderRadius="10px"
-    onClick={onOpen}
+    onClick={onClick}
   >
     <PlusSquareIcon w={6} h={6} />
 

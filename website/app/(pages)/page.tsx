@@ -3,18 +3,12 @@
 import { Flex, Heading, chakra, useDisclosure } from '@chakra-ui/react'
 
 import CreateTask from '@/components/Task/CreateTask'
-import { Task } from '@/store/tasks'
 import TaskComponent from '@/components/Task'
+import useTasksStore from '@/store/tasks'
 
 const Page = () => {
   const { onOpen } = useDisclosure()
-  const tasks = [
-    {
-      id:'t',
-      title: 'Research content ideas',
-      isCompleted: false
-    }
-  ] as Array<Task>
+  const { tasks } = useTasksStore()
 
   return <Flex
     w="100vw" h="100vh"
@@ -42,7 +36,7 @@ const Page = () => {
         direction="column" 
         gap="10px"
       >
-        <CreateTask onOpen={onOpen} />
+        <CreateTask />
 
         {tasks.map((task, i) => (<TaskComponent key={i} task={task} />))}
       </Flex>
